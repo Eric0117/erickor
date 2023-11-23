@@ -1,0 +1,45 @@
+buildscript {
+    ext.esVersion = '8.4.3'
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.elasticsearch.gradle:build-tools:$esVersion"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.0'
+}
+
+group = 'com.eric'
+version = '1.0'
+
+apply plugin: 'elasticsearch.esplugin'
+apply plugin: 'elasticsearch.yaml-rest-test'
+sourceCompatibility = '17'
+
+esplugin {
+    name 'erickor'
+    description 'Elasticsearch Korean analysis token filters plugin'
+    classname 'com.eric.erickor.plugin.EricKorPlugin'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+
+    implementation group: 'org.elasticsearch', name: 'elasticsearch', version: "$esVersion"
+}
+
+test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(17)
+}
