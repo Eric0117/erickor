@@ -1,0 +1,2 @@
+# erickor
+Elasticsearch Korean analyzer
