@@ -1,5 +1,6 @@
 package plugin
 
+import filters.chosung.ChosungFilterFactory
 import filters.engtohan.EngToHanFilterFactory
 import filters.hantoeng.HanToEngFilterFactory
 import filters.jamo.JamoFilterFactory
@@ -34,6 +35,18 @@ class EricKorPlugin: Plugin(), AnalysisPlugin {
         }
 
         // 초성 분석
+        extra["erickor_chosung"] = AnalysisProvider {
+                indexSettings: IndexSettings,
+                environment: Environment,
+                s: String,
+                settings: Settings ->
+            ChosungFilterFactory(
+                indexSettings = indexSettings,
+                environment = environment,
+                name = s,
+                settings = settings
+            )
+        }
 
         // 한->영
         extra["erickor_hantoeng"] = AnalysisProvider {
@@ -48,7 +61,6 @@ class EricKorPlugin: Plugin(), AnalysisPlugin {
                     settings = settings
                 )
         }
-
 
         // 영->한
         extra["erickor_engtohan"] = AnalysisProvider {
