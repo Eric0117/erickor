@@ -1,5 +1,6 @@
 package plugin
 
+import filters.engtohan.EngToHanFilterFactory
 import filters.hantoeng.HanToEngFilterFactory
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.env.Environment
@@ -37,6 +38,18 @@ class EricKorPlugin: Plugin(), AnalysisPlugin {
 
 
         // 영->한
+        extra["erickor_engtohan"] = AnalysisProvider {
+                indexSettings: IndexSettings,
+                environment: Environment,
+                s: String,
+                settings: Settings ->
+            EngToHanFilterFactory(
+                indexSettings = indexSettings,
+                environment = environment,
+                name = s,
+                settings = settings
+            )
+        }
 
         return extra
     }
