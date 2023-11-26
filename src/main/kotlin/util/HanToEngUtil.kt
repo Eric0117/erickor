@@ -6,6 +6,8 @@ import constants.LangMap.arrJongSung
 import constants.LangMap.arrJongSungEng
 import constants.LangMap.arrJungSung
 import constants.LangMap.arrJungSungEng
+import constants.LangMap.isCompleteHangul
+import constants.LangMap.isJamo
 
 /**
  * @author eric
@@ -54,15 +56,6 @@ class HanToEngUtil {
         return sb.toString()
     }
 
-    private fun isCompleteHangul(c: Char): Boolean {
-        // 가-힣에 속하는 완성형 한글
-        return c.code in 0xAC00..0xD7A3
-    }
-
-    private fun isJamo(c: Char): Boolean {
-        // 홑 자모
-        return c.code in 0x3131..0x3163
-    }
 
     private fun findSyllable(c: Char, targetArr: CharArray, targetEngArr: Array<String>): String? {
         val index = targetArr.indexOfFirst { it == c }

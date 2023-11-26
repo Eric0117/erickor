@@ -6,6 +6,7 @@ import constants.LangMap.arrDoubleJongSung
 import constants.LangMap.arrDoubleJungSung
 import constants.LangMap.arrJongSung
 import constants.LangMap.arrJungSung
+import constants.LangMap.isEnglish
 
 /**
  * @author eric
@@ -25,11 +26,6 @@ class EngToHanUtil {
             }
         }
         return assemble(sb.toString())
-    }
-
-    private fun isEnglish(c: Char): Boolean {
-        // A-Z, a-z 에 포함되는 영어 알파벳
-        return c.code in 0x0041..0x005A || c.code in 0x0061..0x007A
     }
 
     private fun assemble(str: String): String {

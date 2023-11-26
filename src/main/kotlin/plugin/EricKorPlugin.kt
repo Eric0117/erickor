@@ -2,6 +2,7 @@ package plugin
 
 import filters.engtohan.EngToHanFilterFactory
 import filters.hantoeng.HanToEngFilterFactory
+import filters.jamo.JamoFilterFactory
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.env.Environment
 import org.elasticsearch.index.IndexSettings
@@ -19,6 +20,18 @@ class EricKorPlugin: Plugin(), AnalysisPlugin {
         val extra = mutableMapOf<String, AnalysisProvider<TokenFilterFactory>>()
 
         // 자모 분석
+        extra["erickor_jamo"] = AnalysisProvider {
+                indexSettings: IndexSettings,
+                environment: Environment,
+                s: String,
+                settings: Settings ->
+            JamoFilterFactory(
+                indexSettings = indexSettings,
+                environment = environment,
+                name = s,
+                settings = settings
+            )
+        }
 
         // 초성 분석
 

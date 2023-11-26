@@ -1,6 +1,22 @@
 package constants
 
 object LangMap {
+
+    fun isCompleteHangul(c: Char): Boolean {
+        // 가-힣에 속하는 완성형 한글
+        return c.code in 0xAC00..0xD7A3
+    }
+
+    fun isJamo(c: Char): Boolean {
+        // 홑 자모
+        return c.code in 0x3131..0x3163
+    }
+
+    fun isEnglish(c: Char): Boolean {
+        // A-Z, a-z 에 포함되는 영어 알파벳
+        return c.code in 0x0041..0x005A || c.code in 0x0061..0x007A
+    }
+
     val arrAlphabet: MutableMap<Char, Char> = mutableMapOf(
         0x0061.toChar() to 0x3141.toChar(), // 'a' = 'ㅁ'
         0x0041.toChar() to 0x3141.toChar(), // 'A' = 'ㅁ'
