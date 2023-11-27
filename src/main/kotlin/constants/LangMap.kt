@@ -94,6 +94,27 @@ object LangMap {
         Pair(0x3157.toChar(), 0x3150.toChar()) to 0x3159.toChar(), // "ㅗㅐ" to "ㅙ",
     )
 
+    val arrDoubleJongSungReverse: MutableMap<Char, Pair<Char, Char>> = mutableMapOf(
+        0x3133.toChar() to Pair(0x3131.toChar(), 0x3145.toChar()), // "ㄳ" to "ㄱㅅ"
+        0x3135.toChar() to Pair(0x3134.toChar(), 0x3148.toChar()), // "ㄵ" to "ㄴㅈ"
+        0x3136.toChar() to Pair(0x3134.toChar(), 0x314e.toChar()), // "ㄶ" to "ㄴㅎ"
+        0x313A.toChar() to Pair(0x3139.toChar(), 0x3131.toChar()), // "ㄺ" to "ㄹㄱ"
+        0x313B.toChar() to Pair(0x3139.toChar(), 0x3141.toChar()), // "ㄻ" to "ㄹㅁ"
+        0x3140.toChar() to Pair(0x3139.toChar(), 0x314e.toChar()), // "ㅀ" to "ㄹㅎ"
+        0x313C.toChar() to Pair(0x3139.toChar(), 0x3142.toChar()), // "ㄼ" to "ㄹㅂ"
+        0x313E.toChar() to Pair(0x3139.toChar(), 0x314c.toChar()), // "ㄾ" to "ㄹㅌ"
+        0x3144.toChar() to Pair(0x3142.toChar(), 0x3145.toChar()), // "ㅄ" to "ㅂㅅ"
+    )
+
+    val arrDoubleJungSungReverse: MutableMap<Char, Pair<Char, Char>> = mutableMapOf(
+        0x315F.toChar() to Pair(0x315c.toChar(), 0x3163.toChar()), // "ㅟ" to "ㅜㅣ"
+        0x3162.toChar() to Pair(0x3161.toChar(), 0x3163.toChar()), // "ㅢ" to "ㅡㅣ"
+        0x3158.toChar() to Pair(0x3157.toChar(), 0x314f.toChar()), // "ㅘ" to "ㅗㅏ"
+        0x315D.toChar() to Pair(0x315c.toChar(), 0x3153.toChar()), // "ㅝ" to "ㅜㅓ"
+        0x315E.toChar() to Pair(0x315c.toChar(), 0x3154.toChar()), // "ㅞ" to "ㅜㅔ"
+        0x315A.toChar() to Pair(0x3157.toChar(), 0x3163.toChar()), // "ㅚ" to "ㅗㅣ"
+        0x3159.toChar() to Pair(0x3157.toChar(), 0x3150.toChar()), // "ㅙ" to "ㅗㅐ"
+    )
 
     val arrChoSung: CharArray = charArrayOf(
         0x3131.toChar(), // ㄱ
