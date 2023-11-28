@@ -1,0 +1,51 @@
+---
+"ES plugin test - Chosung test":
+  - do:
+      indices.analyze:
+        body:
+          text: "반갑습니다 여러분"
+          tokenizer: standard
+          filter:
+            - type: "erickor_chosung"
+  - length: { tokens: 2 }
+  - match:  { tokens.0.token: "ㅂㄱㅅㄴㄷ" }
+  - match:  { tokens.1.token: "ㅇㄹㅂ" }
+
+---
+"ES plugin test - Jamo test":
+  - do:
+      indices.analyze:
+        body:
+          text: "반갑습니다 여러분"
+          tokenizer: standard
+          filter:
+            - type: "erickor_jamo"
+  - length: { tokens: 2 }
+  - match:  { tokens.0.token: "ㅂㅏㄴㄱㅏㅂㅅㅡㅂㄴㅣㄷㅏ" }
+  - match:  { tokens.1.token: "ㅇㅕㄹㅓㅂㅜㄴ" }
+
+---
+"ES plugin test - EngToHan test":
+  - do:
+      indices.analyze:
+        body:
+          text: "qksrkqtmqslek dufjqns"
+          tokenizer: standard
+          filter:
+            - type: "erickor_engtohan"
+  - length: { tokens: 2 }
+  - match:  { tokens.0.token: "반갑습니다" }
+  - match:  { tokens.1.token: "여러분" }
+
+---
+"ES plugin test - HanToEng test":
+  - do:
+      indices.analyze:
+        body:
+          text: "반갑습니다 여러분"
+          tokenizer: standard
+          filter:
+            - type: "erickor_hantoeng"
+  - length: { tokens: 2 }
+  - match:  { tokens.0.token: "qksrkqtmqslek" }
+  - match:  { tokens.1.token: "dufjqns" }
