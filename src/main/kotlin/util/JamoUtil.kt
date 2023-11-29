@@ -14,7 +14,7 @@ class JamoUtil {
 
         for (element in s) {
             when {
-                isCompleteHangul(element) || isJamo(element) -> {
+                isCompleteHangul(element) -> {
                     val idxBasic = element.code - 0xAC00
                     val idxChosung = idxBasic / (21 * 28)
                     val idxJungSung = (idxBasic % (21 * 28)) / 28
