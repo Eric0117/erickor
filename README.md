@@ -119,7 +119,7 @@ gradle yamlRestTest
 ### 1. 오타교정
 특정 필드에 대해 오타교정을 구현하기 위해서는 자모분리 필터를 활용할 수 있습니다. 오타교정을 위한 필드에 자모분리 필터(erickor_jamo)를 추가하고, Term Suggest API를 사용하여 오타교정 기능을 구현합니다.
 
-```json
+```
 1. 인덱스 생성
 PUT /test1
 {
@@ -210,7 +210,7 @@ POST /test1/_search
 ngram 또는 edge-ngram 토큰 필터와 함께 사용하여 자동완성을 구현할 수 있습니다.
 
 인덱싱용 분석기에는 자모분리필터와 ngram필터를 사용하고, 검색용 분석기에는 자모분리 필터만 사용하여야 합니다. 
-```json
+```
 1. 인덱스 생성
 PUT /test2
 {
@@ -315,7 +315,7 @@ POST /test2/_search
 
 ### 3. 한/영 오타 교정
 hantoeng_analyzer와 engtohan_analyzer 분석기를 구현하고 교정을 위한 필드에 분석기를 등록합니다.
-```json
+```
 1. 인덱스 생성
 PUT /test3
 {
@@ -451,7 +451,7 @@ POST /test3/_search
 
 ### 4. 초성검색
 초성 분리 필터인 erickor_chosung를 분석기에 등록하여 초성검색을 구현합니다.
-```json
+```
 1. 인덱스 생성
 PUT /test4
 {
