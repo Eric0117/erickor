@@ -5,7 +5,9 @@
 
 본 프로젝트는 Kotlin, JDK17, Gradle 7.6버전을 사용하여 제작되었습니다.
 
-본 플러그인이 유용하다면, Github Star 부탁드립니다 >.<
+아래 섹션에 해당 플러그인을 사용한 자동완성, 초성검색, 오타교정을 구현한 예제가 구현되어 있습니다.
+
+### 본 플러그인이 유용하다면, Github Star 부탁드립니다 >.<
 
 ## 프로젝트 구조
 ```bash
@@ -108,3 +110,419 @@ gradle yamlRestTest
 [공식문서](https://www.elastic.co/guide/en/elasticsearch/plugins/current/example-text-analysis-plugin.html)
 
 [공식문서 github](https://github.com/elastic/elasticsearch/blob/main/plugins/examples/stable-analysis/src/yamlRestTest/resources/rest-api-spec/test/analysis/20_char_filter.yml)
+
+
+---
+
+## Example
+
+### 1. 오타교정
+특정 필드에 대해 오타교정을 구현하기 위해서는 자모분리 필터를 활용할 수 있습니다. 오타교정을 위한 필드에 자모분리 필터(erickor_jamo)를 추가하고, Term Suggest API를 사용하여 오타교정 기능을 구현합니다.
+
+```json
+1. 인덱스 생성
+PUT /test1
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "index.max_ngram_diff": 10,
+    "analysis": {
+      "analyzer": {
+        "custom_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "erickor_jamo"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "text",
+        "analyzer": "custom_analyzer"
+      }
+    }
+  }
+}
+
+2. 색인
+POST test1/_bulk
+{ "index" : { "_id" : "doc1" } }
+{ "name" : "코틀린" }
+
+3. 오타교정
+POST /test1/_search
+{
+  "suggest": {
+    "name_suggest": {
+      "text": "코틀란",
+      "term": {
+        "field": "name",
+        "max_edits": 2
+      }
+    }
+  }
+}
+
+4. 결과
+{
+  "took": 4,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 0,
+      "relation": "eq"
+    },
+    "max_score": null,
+    "hits": []
+  },
+  "suggest": {
+    "name_suggest": [
+      {
+        "text": "ㅋㅗㅌㅡㄹㄹㅏㄴ",
+        "offset": 0,
+        "length": 3,
+        "options": [
+          {
+            "text": "ㅋㅗㅌㅡㄹㄹㅣㄴ",
+            "score": 0.875,
+            "freq": 1
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### 2. 자동완성
+ngram 또는 edge-ngram 토큰 필터와 함께 사용하여 자동완성을 구현할 수 있습니다.
+
+인덱싱용 분석기에는 자모분리필터와 ngram필터를 사용하고, 검색용 분석기에는 자모분리 필터만 사용하여야 합니다. 
+```json
+1. 인덱스 생성
+PUT /test2
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "index.max_ngram_diff": 10,
+    "analysis": {
+      "filter": {
+        "1_10_ngram_filter": {
+          "type": "ngram",
+          "min_gram": 1,
+          "max_gram": 10
+        }
+      },
+      "analyzer": {
+        "search_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "erickor_jamo"
+          ]
+        },
+        "index_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "erickor_jamo",
+            "1_10_ngram_filter"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "text",
+        "analyzer": "index_analyzer",
+        "search_analyzer": "search_analyzer"
+      }
+    }
+  }
+}
+
+2. 색인
+POST test2/_bulk
+{ "index" : { "_id" : "doc1" } }
+{ "name" : "코틀린" }
+{ "index" : { "_id" : "doc2" } }
+{ "name" : "맛있는 코카콜라" }
+
+3. 자동완성
+POST /test2/_search
+{
+  "query": {
+    "match": {
+      "name": "코"
+    }
+  }
+}
+
+4. 결과
+{
+  "took": 2,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 2,
+      "relation": "eq"
+    },
+    "max_score": 0.34450948,
+    "hits": [
+      {
+        "_index": "test2",
+        "_id": "doc2",
+        "_score": 0.34450948,
+        "_source": {
+          "name": "맛있는 코카콜라"
+        }
+      },
+      {
+        "_index": "test2",
+        "_id": "doc1",
+        "_score": 0.30519044,
+        "_source": {
+          "name": "코틀린"
+        }
+      }
+    ]
+  }
+}
+```
+
+### 3. 한/영 오타 교정
+hantoeng_analyzer와 engtohan_analyzer 분석기를 구현하고 교정을 위한 필드에 분석기를 등록합니다.
+```json
+1. 인덱스 생성
+PUT /test3
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "index.max_ngram_diff": 10,
+    "analysis": {
+      "analyzer": {
+        "hantoeng_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "erickor_hantoeng"
+          ]
+        },
+        "engtohan_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "erickor_engtohan"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "keyword",
+        "copy_to": [
+          "name_hantoeng",
+          "name_engtohan"
+        ]
+      },
+      "name_hantoeng": {
+        "type": "text",
+        "analyzer": "hantoeng_analyzer"
+      },
+      "name_engtohan": {
+        "type": "text",
+        "analyzer": "engtohan_analyzer"
+      }
+    }
+  }
+}
+
+2. 색인
+POST test3/_bulk
+{ "index" : { "_id" : "doc1" } }
+{ "name" : "코틀린" }
+{ "index" : { "_id" : "doc2" } }
+{ "name" : "cocacola" }
+
+3. 한영 오타교정
+POST /test3/_search
+{
+  "query": {
+    "match": {
+      "name_engtohan": "zhxmffls"
+    }
+  }
+}
+
+{
+  "query": {
+    "match": {
+      "name_hantoeng": "챛ㅁ채ㅣㅁ"
+    }
+  }
+}
+
+4. 결과
+{
+  "took": 1,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 0.6931471,
+    "hits": [
+      {
+        "_index": "test3",
+        "_id": "doc1",
+        "_score": 0.6931471,
+        "_source": {
+          "name": "코틀린"
+        }
+      }
+    ]
+  }
+}
+
+
+{
+  "took": 2,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 0.6931471,
+    "hits": [
+      {
+        "_index": "test3",
+        "_id": "doc2",
+        "_score": 0.6931471,
+        "_source": {
+          "name": "cocacola"
+        }
+      }
+    ]
+  }
+}
+```
+
+### 4. 초성검색
+초성 분리 필터인 erickor_chosung를 분석기에 등록하여 초성검색을 구현합니다.
+```json
+1. 인덱스 생성
+PUT /test4
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "index.max_ngram_diff": 10,
+    "analysis": {
+      "analyzer": {
+        "chosung_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "erickor_chosung"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "text",
+        "analyzer": "chosung_analyzer"
+      }
+    }
+  }
+}
+
+2. 색인
+POST test4/_bulk
+{ "index" : { "_id" : "doc1" } }
+{ "name" : "코틀린" }
+
+3. 초성검색
+POST /test4/_search
+{
+  "query": {
+    "match": {
+      "name": "ㅋㅌㄹ"
+    }
+  }
+}
+
+4. 결과
+{
+  "took": 1,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 0.2876821,
+    "hits": [
+      {
+        "_index": "test4",
+        "_id": "doc1",
+        "_score": 0.2876821,
+        "_source": {
+          "name": "코틀린"
+        }
+      }
+    ]
+  }
+}
+```
