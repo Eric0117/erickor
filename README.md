@@ -5,8 +5,6 @@
 
 본 프로젝트는 Kotlin, JDK17, Gradle 7.6버전을 사용하여 제작되었습니다.
 
-또한 현재는 엘라스틱서치 8.4.3버전만을 타겟으로 제작되었습니다. 8.4.3이후 버전은 차차 추가해갈 예정입니다.
-
 아래 섹션에 해당 플러그인을 사용한 자동완성, 초성검색, 오타교정을 구현한 예제가 구현되어 있습니다.
 
 ### 본 플러그인이 유용하다면, Github Star 부탁드립니다 >.<
@@ -16,6 +14,8 @@
 
 Plugin Version
 [8.4.3](https://github.com/Eric0117/erickor/tree/8.4.3)
+[8.5.0](https://github.com/Eric0117/erickor/tree/8.5.0)
+[8.5.1](https://github.com/Eric0117/erickor/tree/8.5.1)
 
 
 ## 프로젝트 구조
