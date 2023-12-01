@@ -13,9 +13,9 @@
 [note] [ElasticSearch Released Versions](https://www.elastic.co/guide/en/elasticsearch/reference/current/es-release-notes.html)
 
 Plugin Version
-[8.4.3](https://github.com/Eric0117/erickor/tree/8.4.3)
-[8.5.0](https://github.com/Eric0117/erickor/tree/8.5.0)
-[8.5.1](https://github.com/Eric0117/erickor/tree/8.5.1)
+- [8.4.3](https://github.com/Eric0117/erickor/tree/8.4.3)
+- [8.5.0](https://github.com/Eric0117/erickor/tree/8.5.0)
+- [8.5.1](https://github.com/Eric0117/erickor/tree/8.5.1)
 
 
 ## 프로젝트 구조
