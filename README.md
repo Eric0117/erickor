@@ -11,6 +11,13 @@
 
 ### 본 플러그인이 유용하다면, Github Star 부탁드립니다 >.<
 
+## Versions
+[note] [ElasticSearch Released Versions](https://www.elastic.co/guide/en/elasticsearch/reference/current/es-release-notes.html)
+
+Plugin Version
+[8.4.3](https://github.com/Eric0117/erickor/tree/8.4.3)
+
+
 ## 프로젝트 구조
 ```bash
 ├── kotlin
