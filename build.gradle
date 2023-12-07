@@ -1,5 +1,5 @@
 buildscript {
-    ext.esVersion = '8.4.3'
+    ext.esVersion = '8.5.2'
     repositories {
         mavenLocal()
         mavenCentral()
