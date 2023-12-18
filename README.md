@@ -21,6 +21,7 @@ Plugin Version
 - [8.6.0](https://github.com/Eric0117/erickor/tree/8.6.0)
 - [8.6.1](https://github.com/Eric0117/erickor/tree/8.6.1)
 - [8.6.2](https://github.com/Eric0117/erickor/tree/8.6.2)
+- [8.7.0](https://github.com/Eric0117/erickor/tree/8.7.0)
 
 ## 프로젝트 구조
 ```bash
